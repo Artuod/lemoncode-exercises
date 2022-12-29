@@ -1,0 +1,7 @@
+show databases
+show database
+exit
+show collections
+show databases
+use TopicstoreDb
+show databases

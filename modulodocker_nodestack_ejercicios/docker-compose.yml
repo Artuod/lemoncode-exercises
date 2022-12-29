@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile    
+    ports:
+      - 8080:3000
+    depends_on:
+      - topics-api
+    environment:
+      - API_URI=http://topics-api:5000/api/topics
+    networks:
+      - lemoncode-challenge
+  topics-api:
+    depends_on:
+      - some-mongo
+    environment:
+      - HOST=topics-api
+      - DATABASE_URL=mongodb://some-mongo:27017
+      - DATABASE_NAME=TopicstoreDb
+      - PORT=5000
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    ports:
+      - 5001:5000
+    networks:
+      - lemoncode-challenge
+  some-mongo:
+    container_name: mongodb
+    build:
+      context: ./mongo
+      dockerfile: ./Dockerfile
+    image: mongo:latest
+    restart: always
+    networks:
+      - lemoncode-challenge
+    volumes:
+      - ./data/db:/data/db
+  
+README.MDnetworks:
+  lemoncode-challenge:
